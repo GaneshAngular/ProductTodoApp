@@ -1,0 +1,17 @@
+const SERVER_ERROR=500
+const CREATED=201
+const OK=200
+const NOT_FOUND=404
+const UNAUTHORISE=401
+const INVALID=406
+const FOUND=302
+
+export{
+    SERVER_ERROR,
+    OK,
+    CREATED,
+    NOT_FOUND,
+    UNAUTHORISE,
+    INVALID,
+    FOUND
+}

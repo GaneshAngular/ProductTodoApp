@@ -1,15 +1,21 @@
 import express from "express";
-import Product from "./interfaces/product.interface";
+import routes from "./routes/routes";
+import connecteDatabase from "./services/mongoose.service";
+import cors from 'cors'
+import cookieParser from "cookie-parser";
+const {userRoute,authRoute}=routes
 
 const app= express();
 
-
+ connecteDatabase()
+ app.use(cookieParser())
+//  app.use(cors({origin: 'http://localhost:4200'}))
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('Hello, Node!');
-});
+app.use('/auth',authRoute)
+app.use('/user',userRoute);
+
 
 app.listen(3000,()=>{
-    console.log('Server is running on port 3000');
+    console.log('Server is running on port 3000'); 
 })
