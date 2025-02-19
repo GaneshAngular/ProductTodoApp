@@ -2,7 +2,7 @@ import { Request, Response,  } from "express";
 import User from "../interfaces/user.interface";
 import { createHash } from "../services/bcrypt.service";
 import models from "../models/models";
-import { CREATED, FOUND, NOT_FOUND, OK, SERVER_ERROR } from "../constants/statusCode";
+import { CREATED, FOUND, NOT_FOUND, OK, SERVER_ERROR, UNAUTHORISE } from "../constants/statusCode";
 import { EMPLOYEE } from "../constants/constants";
 import { verifyToken } from "../services/jwt.service";
 
@@ -23,13 +23,14 @@ const getEmployees=async(req:Request,res:Response):Promise<any>=>{
 
 const addEmployee=async(req:Request,res:Response):Promise<any>=>{
     const user:User=req.body
-    user.password=await createHash(user.password)
     try {
         const isExist=await userModel.findOne({email:user.email})
         console.log(isExist)
         if(isExist)
-           return res.status(OK).json({message:"Email exist"})
-       
+            return res.status(OK).json({message:"Email exist"})
+        
+        user.password=await createHash(user.password)
+        console.log(user)
        const newUser=await userModel.create(user)
        
        return res.status(CREATED).json({message:"Employee Added"})
@@ -51,14 +52,14 @@ const getProfile=async(req:Request,res:Response):Promise<any>=>{
 
 
 const updateProfile=async(req:Request,res:Response):Promise<any>=>{
+    const data=req.body
+      const token=req.headers.authorization?.split(' ')[1]||''
     try{    
-        const data=req.body
-          const token=req.headers.authorization?.split(' ')[1]||''
           const id:any=verifyToken(token)
+          if(!id)return res.status(UNAUTHORISE).json({message:"Unauthorise"})
           const user=await userModel.findByIdAndUpdate(id.id,data)
           return res.status(FOUND).json({message:"Profile Updated",data})
     }catch(error){
-        console.log(error)
         return res.status(SERVER_ERROR).json({message:"Server error"})
     }
 }

@@ -14,8 +14,8 @@ const signIn=async(req:Request,res:Response):Promise<any>=>{
            
            const user=await userModel.findOne({email})
            if(!user) return res.status(NOT_FOUND).json({message:"No Account Exist"})
-     
-        const isVerified=await compareHash(password,user.password)
+            const isVerified=await compareHash(password,user.password)
+           console.log(user)
           
           if(!isVerified)return res.status(INVALID).json({message:"Invalid Login"})
             
