@@ -1,0 +1,28 @@
+<div class="w-dvw h-auto grid grid-cols-1 grid-rows-1 items-center justify-items-center">
+  <div class="w-72 h-auto">
+              <div class="items-end">
+                  <div class="py-10 text-center">
+                    <h1 class="text-blue-500 text-4xl">Login</h1>
+                  </div>
+                  <div class="p-3" >
+                         <form action="" [formGroup]="loginForm">
+                            <div class="flex flex-col gap-3" >
+                               <label for="email">Email</label>
+                               <input type="text" formControlName="email" class="outline-none border border-gray-500 rounded-md p-1" name="email" id="email" placeholder="email">
+                              <p class="text-red-500 m-0 p-0 " *ngIf="checkInvalidFields('email')">*invalid email  </p>
+                            </div>
+                            <div class="flex flex-col gap-3 my-7" >
+                              <label for="password">Password</label>
+                              <input type="password" formControlName="password" class="outline-none border border-gray-500 rounded-md p-1" name="password" id="password" placeholder="password">
+                              <p class="text-red-500 m-0 p-0 " *ngIf="checkInvalidFields('password')">*invalid password  </p>
+                           </div>
+                           <div class="flex flex-col gap-3 my-7 ">
+                            <button class="p-1 bg-blue-500 w-4/5 mx-auto rounded-sm" (click)="onLogin()">Login</button>
+                          </div>
+                          <p class="text-gray-600 ">New User ?  <span class="text-blue-600 cursor-pointer " [routerLink]="['/signup']">Signup</span></p>
+                         </form>
+                  </div>
+              </div>
+  </div>
+
+</div>

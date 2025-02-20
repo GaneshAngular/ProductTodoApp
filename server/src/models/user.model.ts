@@ -5,6 +5,7 @@ import {model, Schema} from "mongoose";
     email: {type:String,required:true},
     password: {type:String,required:true},
     role: {type:String,required:true},
+    refreshToken:{type:String},
     isActive: {type: Boolean, default: true}
 })
 const userModel=model('user',userSchema)

@@ -9,6 +9,6 @@ authRoute.post('/signin',authController.signIn)
 
 authRoute.post('/signup',authController.signUp)
 
-authRoute.post('/refresh',authController.refreshToken)
+authRoute.get('/refresh',authController.refreshToken)
 
 export default authRoute

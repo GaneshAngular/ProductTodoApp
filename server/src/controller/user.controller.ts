@@ -41,7 +41,7 @@ const addEmployee=async(req:Request,res:Response):Promise<any>=>{
 
 const getProfile=async(req:Request,res:Response):Promise<any>=>{
        try{
-             const token=req.headers.authorization?.split(' ')[1]||''
+             const {accessToken:token}=req.cookies
              const id:any=verifyToken(token)
              const user=await userModel.findById(id.id)
              return res.status(FOUND).json({data:user})
@@ -53,7 +53,8 @@ const getProfile=async(req:Request,res:Response):Promise<any>=>{
 
 const updateProfile=async(req:Request,res:Response):Promise<any>=>{
     const data=req.body
-      const token=req.headers.authorization?.split(' ')[1]||''
+    const {accessToken:token}=req.cookies
+
     try{    
           const id:any=verifyToken(token)
           if(!id)return res.status(UNAUTHORISE).json({message:"Unauthorise"})
