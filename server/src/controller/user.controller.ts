@@ -14,7 +14,7 @@ const getEmployees=async(req:Request,res:Response):Promise<any>=>{
             const employees=await userModel.find({role:EMPLOYEE})
             if(employees.length==0) return res.status(NOT_FOUND).json({message:"success",data:employees})
 
-          return res.status(FOUND).json({data:employees})
+          return res.status(OK).json({data:employees})
         } catch (error) {
           return res.status(SERVER_ERROR).json({message:"Server error"})
             
@@ -25,12 +25,12 @@ const addEmployee=async(req:Request,res:Response):Promise<any>=>{
     const user:User=req.body
     try {
         const isExist=await userModel.findOne({email:user.email})
-        console.log(isExist)
+      
         if(isExist)
             return res.status(OK).json({message:"Email exist"})
         
         user.password=await createHash(user.password)
-        console.log(user)
+       
        const newUser=await userModel.create(user)
        
        return res.status(CREATED).json({message:"Employee Added"})

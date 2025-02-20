@@ -7,7 +7,7 @@ const userRoute=Router()
 
 userRoute.get('/',userController.getEmployees)
 
-userRoute.get('/',userController.getEmployees)
+userRoute.post('/',userController.addEmployee)
 
 userRoute.get('/self',userController.getProfile)
 

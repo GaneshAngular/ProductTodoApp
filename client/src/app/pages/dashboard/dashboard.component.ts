@@ -22,25 +22,26 @@
 
 
 
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EMPLOYEE } from '../../core/constants/constant';
 import { EmployeeService } from '../../core/services/employee/employee.service';
 import { Employee } from '../../core/constants/interface';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule,CurrencyPipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
   departments=['HR','ENGINEERING','MARKETING','FINANCE']
- 
+   employees:any
   employeeService=inject(EmployeeService)
-
+   id:any
   toggleEmployeeForm=false
 
   addForm=new FormGroup({
@@ -56,9 +57,19 @@ export class DashboardComponent {
     salary: new FormControl(0, [Validators.required,Validators.pattern(/^[0-9]{2,}$/)]),
     role: new FormControl(EMPLOYEE)
   })
-
+  
+  ngOnInit(): void {
+    this.loadEmployees()
+  }
   toggleFormModal(){
+    this.addForm.reset()
     this.toggleEmployeeForm =!this.toggleEmployeeForm;
+  }
+
+  loadEmployees(){
+     this.employeeService.getEmployees().subscribe((res:any)=>{
+       this.employees=res.data
+     })
   }
 
   checkInvalidFields(field:'name'|'email'|'password'|'salary'|'department'|'dob'|'position'){
@@ -86,8 +97,46 @@ addEmployee(){
             alert(res.message)
             this.addForm.reset()
             this.toggleEmployeeForm=false
+            this.loadEmployees()
     })
 
+}
+
+updateFormToggle(index:number){
+  const employee = this.employees[index]
+  this.addForm.patchValue(employee)
+    this.id=employee._id
+    this.toggleEmployeeForm=true
+}
+
+updateEmployee(){
+  if(this.addForm.invalid)return alert("please fill details")
+
+    const params=new HttpParams().set('id',this.id)
+    const employee:Employee={name:this.addForm.value.name||'',
+      email:this.addForm.value.email||'',
+      password:this.addForm.value.password||'',
+      department:this.addForm.value.department||'',
+      dob:this.addForm.value.dob ||'',
+      position:this.addForm.value.position?.toUpperCase()||'',
+      salary:this.addForm.value.salary||0,
+      role:this.addForm.value.role ||'',
+}
+  this.employeeService.updateEmployee(employee,params).subscribe((res:any)=>{
+    alert(res.message)
+    this.addForm.reset()
+    this.toggleEmployeeForm=false
+    this.loadEmployees()
+  })
+}
+
+deleteEmployee(id:string){
+    const params=new HttpParams().set('id',id)
+    if(confirm("Are you sure"))
+    this.employeeService.deleteEmployee(params).subscribe((res:any)=>{
+      alert(res.message)
+      this.loadEmployees()
+    })
 }
 
 }
