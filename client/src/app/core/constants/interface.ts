@@ -10,10 +10,12 @@ interface AUTH{
 interface Employee{
     name:string,
     email:string;
+    position:string;
     password:string;
-    dob:Date;
-    joinDate:Date;
-    Salary:number;
+    dob:string;
+    role:string;
+    department:string;
+    salary:number;
 }
 
 export type {
