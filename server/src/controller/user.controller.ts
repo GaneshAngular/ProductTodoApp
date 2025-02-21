@@ -12,41 +12,38 @@ const{userModel}=models
 const getEmployees=async(req:Request,res:Response):Promise<any>=>{
   try {
     const query:any = req.query;
-      console.log(query);
-    // Default values for pagination, page 1 and 10 items per page
+     
+    
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.limit) || 10;
   
-    // Calculate the number of items to skip based on the page number
+    
     const skip = (page - 1) * limit;
   
-    // Default sorting by name, if no query parameter provided
-    const sortBy = query.sortBy || 'department'; // You can specify any field for sorting
-    // Default sort order is ascending
+    
+    const sortBy = query.sortBy || 'department'; 
+    
   
-    // Regex search pattern for name (if a search string is provided)
+    
     const searchPattern = query.search || '';
-    const nameRegex = new RegExp(`^${searchPattern}`, 'i'); // case-insensitive regex search
+    const nameRegex = new RegExp(`^${searchPattern}`, 'i'); 
   
-    // Construct the query
+   
     const filter = { role: EMPLOYEE, name: { $regex: nameRegex } };
   
-    // Find employees with pagination, sorting, and filtering
     const employees = await userModel.find(filter)
-      .skip(skip)          // Skip items for pagination
-      .limit(limit)        // Limit the number of results per page
-      .sort({ [sortBy]: 1 });  // Sort by the specified field (ascending or descending)
-  
-    // Check if any employees were found
+      .skip(skip)        
+      .limit(limit)        
+      .sort({ [sortBy]: 1 });  
+    
    
     const totalRecords = await userModel.countDocuments(filter);
     const totalPages = Math.ceil(totalRecords / limit);
   
-    // Send the response with the employees data
     return res.status(OK).json({ data: employees,limit,totalPages });
   
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error); 
     return res.status(SERVER_ERROR).json({ message: "Server error" });
   }
   
@@ -101,6 +98,8 @@ const updateEmployee=async(req:Request,res:Response):Promise<any>=>{
       try {
              const {id}=req.query
              const newData=req.body
+               const isExist=await userModel.findOne({email:newData.email})
+               if(isExist)return res.status(FOUND).json({message:"Email Already exists"})
               const user=await userModel.findByIdAndUpdate(id,newData)
               if(!user)return res.status(NOT_FOUND).json({message:"Not Found"})
 

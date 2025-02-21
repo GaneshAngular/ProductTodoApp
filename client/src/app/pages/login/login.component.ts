@@ -50,7 +50,7 @@ export class LoginComponent {
       password: this.loginForm.value.password || '',
     };
     this.authService.signin(login).subscribe((res: any) => {
-      console.log(res.token);
+   
       alert(res.message);
       this.localService.setToken(res.token);
       this.loginForm.reset();

@@ -21,8 +21,7 @@ import { cookieOption } from "../constants/constants";
 
 const { userModel } = models;
 const signIn = async (req: Request, res: Response): Promise<any> => {
-  const refreshToken = req.cookies.refreshToken;
-  console.log(refreshToken);
+
   try {
     const { email, password } = req.body;
 
@@ -87,7 +86,7 @@ const refreshToken = async (req: Request, res: Response): Promise<any> => {
 
 
           const newAccessToken=createToken({id:verifyRefresh.id,role:verifyRefresh.role})
-          console.log("TOken refreshed")
+      
           return res.status(OK).json({message:"token refreshed",token:newAccessToken})
 
   } catch (error:any) {
