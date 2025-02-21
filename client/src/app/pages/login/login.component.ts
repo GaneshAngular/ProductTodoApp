@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { AUTH } from '../../core/constants/interface';
 
@@ -23,7 +23,8 @@ import { CookiestorageService } from '../../core/services/cookie/cookiestorage.s
 export class LoginComponent {
   constructor(
     private authService: AuthService,
-    private localService: LocalstorageService
+    private localService: LocalstorageService,
+    private router:Router
   ) {}
   // cookieServie = inject(CookiestorageService);
   loginForm = new FormGroup({
@@ -53,7 +54,8 @@ export class LoginComponent {
       alert(res.message);
       this.localService.setToken(res.token);
       this.loginForm.reset();
-      // this.cookieServie.getToken();
+       this.router.navigate(['/dashboard']);
+       this.authService.setUserActive(true)
     });
   }
 }

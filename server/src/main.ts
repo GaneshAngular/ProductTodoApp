@@ -14,9 +14,9 @@ const app= express();
 app.use(express.json());
 
 app.use('/auth',authRoute)
-app.use('/user',userRoute);
+app.use('/user',verifyAccessToken,userRoute);
 
-
+ 
 app.listen(3000,()=>{
     console.log('Server is running on port 3000'); 
 })

@@ -1,38 +1,16 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EMPLOYEE } from '../../core/constants/constant';
 import { EmployeeService } from '../../core/services/employee/employee.service';
 import { Employee } from '../../core/constants/interface';
 import { HttpParams } from '@angular/common/http';
+import { PaginationComponent } from "../../components/pagination/pagination.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule,ReactiveFormsModule,CurrencyPipe],
+  imports: [CommonModule, ReactiveFormsModule, CurrencyPipe, PaginationComponent,FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -42,8 +20,12 @@ export class DashboardComponent implements OnInit {
    employees:any
   employeeService=inject(EmployeeService)
    id:any
+   totalPages:any
+   page=1
+   searchQuery=""
+   limit=5
   toggleEmployeeForm=false
-
+  today=new Date()
   addForm=new FormGroup({
     name:new FormControl('',[Validators.required,Validators.pattern(/^[a-zA-Z\s]{2,}$/)]),
     email:new FormControl('',[Validators.required,Validators.email]),
@@ -57,7 +39,7 @@ export class DashboardComponent implements OnInit {
     salary: new FormControl(0, [Validators.required,Validators.pattern(/^[0-9]{2,}$/)]),
     role: new FormControl(EMPLOYEE)
   })
-  
+
   ngOnInit(): void {
     this.loadEmployees()
   }
@@ -67,8 +49,12 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployees(){
-     this.employeeService.getEmployees().subscribe((res:any)=>{
+    let params=new HttpParams().set('page',this.page).set('limit',this.limit)
+    if(this.searchQuery)
+       params=params.set('search',this.searchQuery)
+     this.employeeService.getEmployees(params).subscribe((res:any)=>{
        this.employees=res.data
+       this.totalPages=res.totalPages
      })
   }
 
@@ -79,10 +65,15 @@ export class DashboardComponent implements OnInit {
   }
   return false
 }
+changePage(event:any){
+   this.page=event
+   this.loadEmployees()
+}
+
 
 addEmployee(){
   if(this.addForm.invalid)return alert("please fill details")
-      
+
     const employee:Employee={name:this.addForm.value.name||'',
           email:this.addForm.value.email||'',
           password:this.addForm.value.password||'',
@@ -90,7 +81,7 @@ addEmployee(){
           dob:this.addForm.value.dob ||'',
           position:this.addForm.value.position?.toUpperCase()||'',
           salary:this.addForm.value.salary||0,
-          role:this.addForm.value.role ||'',
+          role:EMPLOYEE,
     }
 
     this.employeeService.addEmployee(employee).subscribe((res:any)=>{

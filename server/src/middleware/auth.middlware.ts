@@ -10,7 +10,6 @@ const verifyAccessToken=async(req:Request,res:Response,next:NextFunction):Promis
                     if(!accessToken)return res.status(UNAUTHORISE).json({message:"Unauthorise"}) 
                         
                         const verify=verifyToken(accessToken)
-                       
                        if(!verify)return res.status(UNAUTHORISE).json({message:"Unauthorise"}) 
 
                       next()  

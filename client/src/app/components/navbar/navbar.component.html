@@ -1,9 +1,9 @@
 
-<div class="w-dvw  h-15 flex justify-between align-middle px-20  border border-b-gray-400">
+<div class="w-dvw  h-15 flex justify-between items-center px-20  border border-b-gray-400">
   <div class="w-1/3">
      <h1 class="text-4xl"><span class="text-blue-500">E</span><span class="text-blue-300">M</span><span class="text-blue-100">S</span></h1>
   </div>
-  <div class="w-2/3">
-
+  <div class="">
+    <li *ngIf="isUser" (click)="logOut()" class="text-xl list-none cursor-pointer text-blue-500">Logout</li>
   </div>
 </div>

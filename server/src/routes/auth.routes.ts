@@ -11,4 +11,6 @@ authRoute.post('/signup',authController.signUp)
 
 authRoute.get('/refresh',authController.refreshToken)
 
+authRoute.get('/logout',authController.logOut)
+
 export default authRoute

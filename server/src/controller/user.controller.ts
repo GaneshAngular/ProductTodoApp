@@ -10,15 +10,46 @@ const{userModel}=models
 
 
 const getEmployees=async(req:Request,res:Response):Promise<any>=>{
-        try {
-            const employees=await userModel.find({role:EMPLOYEE})
-            if(employees.length==0) return res.status(NOT_FOUND).json({message:"success",data:employees})
-
-          return res.status(OK).json({data:employees})
-        } catch (error) {
-          return res.status(SERVER_ERROR).json({message:"Server error"})
-            
-        }
+  try {
+    const query:any = req.query;
+      console.log(query);
+    // Default values for pagination, page 1 and 10 items per page
+    const page = parseInt(query.page) || 1;
+    const limit = parseInt(query.limit) || 10;
+  
+    // Calculate the number of items to skip based on the page number
+    const skip = (page - 1) * limit;
+  
+    // Default sorting by name, if no query parameter provided
+    const sortBy = query.sortBy || 'department'; // You can specify any field for sorting
+    // Default sort order is ascending
+  
+    // Regex search pattern for name (if a search string is provided)
+    const searchPattern = query.search || '';
+    const nameRegex = new RegExp(`^${searchPattern}`, 'i'); // case-insensitive regex search
+  
+    // Construct the query
+    const filter = { role: EMPLOYEE, name: { $regex: nameRegex } };
+  
+    // Find employees with pagination, sorting, and filtering
+    const employees = await userModel.find(filter)
+      .skip(skip)          // Skip items for pagination
+      .limit(limit)        // Limit the number of results per page
+      .sort({ [sortBy]: 1 });  // Sort by the specified field (ascending or descending)
+  
+    // Check if any employees were found
+   
+    const totalRecords = await userModel.countDocuments(filter);
+    const totalPages = Math.ceil(totalRecords / limit);
+  
+    // Send the response with the employees data
+    return res.status(OK).json({ data: employees,limit,totalPages });
+  
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    return res.status(SERVER_ERROR).json({ message: "Server error" });
+  }
+  
 }
 
 const addEmployee=async(req:Request,res:Response):Promise<any>=>{
@@ -35,13 +66,14 @@ const addEmployee=async(req:Request,res:Response):Promise<any>=>{
        
        return res.status(CREATED).json({message:"Employee Added"})
    } catch (error) {
-       return res.json(SERVER_ERROR).json({messgae:"Server error"})
+    console.log(error)
+       return res.status(SERVER_ERROR).json({messgae:"Server error"})
    }
 }
 
 const getProfile=async(req:Request,res:Response):Promise<any>=>{
        try{
-             const {accessToken:token}=req.cookies
+        const token=req.headers?.authorization?.split(' ')[1]||''
              const id:any=verifyToken(token)
              const user=await userModel.findById(id.id)
              return res.status(FOUND).json({data:user})
@@ -53,8 +85,7 @@ const getProfile=async(req:Request,res:Response):Promise<any>=>{
 
 const updateProfile=async(req:Request,res:Response):Promise<any>=>{
     const data=req.body
-    const {accessToken:token}=req.cookies
-
+    const token=req.headers?.authorization?.split(' ')[1]||''
     try{    
           const id:any=verifyToken(token)
           if(!id)return res.status(UNAUTHORISE).json({message:"Unauthorise"})
