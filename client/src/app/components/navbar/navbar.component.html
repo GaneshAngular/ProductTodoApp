@@ -1,9 +1,26 @@
-
-<div class="w-dvw  h-15 flex justify-between items-center px-20  border border-b-gray-400">
+<div
+  class="w-dvw h-15 text-white flex justify-between items-center min-md:px-20 border dark:border-b-red border-b-gray-400"
+>
   <div class="w-1/3">
-     <h1 class="text-4xl"><span class="text-blue-500">E</span><span class="text-blue-300">M</span><span class="text-blue-100">S</span></h1>
+    <h1 class="text-4xl">
+      <span class="text-blue-500">E</span><span class="text-blue-300">M</span
+      ><span class="text-blue-100">S</span>
+    </h1>
   </div>
-  <div class="">
-    <li *ngIf="isUser" (click)="logOut()" class="text-xl list-none cursor-pointer text-blue-500">Logout</li>
+  <div class="flex justify-end gap-1">
+    <li
+      *ngIf="isUser"
+      (click)="logOut()"
+      class="text-xl list-none cursor-pointer text-blue-500"
+    >
+      Logout
+    </li>
+
+    <label class="inline-flex items-center cursor-pointer" (click)="changeTheme()">
+      <input type="checkbox" value="" name="theme" [(ngModel)]="darkTheme" class="sr-only peer"  />
+      <div
+        class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-gray-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-gray-600 dark:peer-checked:bg-gray-400"
+      ></div>
+    </label>
   </div>
 </div>

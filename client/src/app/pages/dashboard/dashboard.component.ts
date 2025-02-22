@@ -1,6 +1,6 @@
 
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, Signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EMPLOYEE } from '../../core/constants/constant';
 import { EmployeeService } from '../../core/services/employee/employee.service';
@@ -20,8 +20,10 @@ export class DashboardComponent implements OnInit {
    employees:any
   employeeService=inject(EmployeeService)
    id:any
-   totalPages:any
+   order=false
+   totalPages = signal<number>(0)
    page=1
+   sortBy='name'
    searchQuery=""
    limit=5
   toggleEmployeeForm=false
@@ -49,12 +51,12 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployees(){
-    let params=new HttpParams().set('page',this.page).set('limit',this.limit)
+    let params=new HttpParams().set('page',this.page).set('limit',this.limit).set('order',this.order?'desc':'asc').set('sort',this.sortBy)
     if(this.searchQuery)
        params=params.set('search',this.searchQuery)
      this.employeeService.getEmployees(params).subscribe((res:any)=>{
        this.employees=res.data
-       this.totalPages=res.totalPages
+       this.totalPages.set(res.totalPages)
      })
   }
 

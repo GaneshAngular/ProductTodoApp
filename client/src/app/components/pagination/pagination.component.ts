@@ -16,16 +16,18 @@ export class PaginationComponent implements OnInit ,OnChanges{
   @Input() page:any
 
   pages:any=[]
-  currantPage:any
+  currantPage=1
   ngOnInit(): void {
   this.generatePageNumbers()
        this.currantPage=this.page
   }
   ngOnChanges(){
+    console.log(this.totalPages)
     this.generatePageNumbers()
   }
   generatePageNumbers() {
-    this.pages = Array(this.totalPages<10||10).fill(0).map((_, i) => i + this.currantPage);
+    this.pages = Array(this.totalPages).fill(0).map((_, i) => i +1);
+    console.log(this.pages)
   }
 
   viewPage(page:number){

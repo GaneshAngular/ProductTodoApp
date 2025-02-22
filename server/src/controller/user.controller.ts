@@ -13,15 +13,15 @@ const getEmployees=async(req:Request,res:Response):Promise<any>=>{
   try {
     const query:any = req.query;
      
-    
+    console.log(query)
     const page = parseInt(query.page) || 1;
     const limit = parseInt(query.limit) || 10;
   
     
     const skip = (page - 1) * limit;
   
-    
-    const sortBy = query.sortBy || 'department'; 
+    const order=query.order
+    const sortBy =query.sort; 
     
   
     
@@ -34,7 +34,7 @@ const getEmployees=async(req:Request,res:Response):Promise<any>=>{
     const employees = await userModel.find(filter)
       .skip(skip)        
       .limit(limit)        
-      .sort({ [sortBy]: 1 });  
+      .sort({ [sortBy]:order });  
     
    
     const totalRecords = await userModel.countDocuments(filter);

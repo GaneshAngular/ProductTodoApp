@@ -8,8 +8,13 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private httpService: HttpService) {}
-  isUser:any = new BehaviorSubject(false)
+  isUser = new BehaviorSubject(false)
+
+  constructor(private httpService: HttpService) {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken)
+       this.isUser.next(true)
+  }
 
   signin(data: AUTH) {
     return this.httpService.post(AUTH_URL.signin, data);
@@ -28,7 +33,7 @@ export class AuthService {
   getUserActive(){
     return this.isUser.asObservable()
   }
-  setUserActive(active:Boolean){
+  setUserActive(active:boolean){
     this.isUser.next(active)
   }
 }
