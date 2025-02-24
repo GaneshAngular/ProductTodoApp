@@ -51,6 +51,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployees(){
+    console.log(this.order)
     let params=new HttpParams().set('page',this.page).set('limit',this.limit).set('order',this.order?'desc':'asc').set('sort',this.sortBy)
     if(this.searchQuery)
        params=params.set('search',this.searchQuery)

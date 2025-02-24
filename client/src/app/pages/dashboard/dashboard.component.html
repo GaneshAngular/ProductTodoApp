@@ -1,20 +1,21 @@
-<div class="w-dvw max-md:overflow-hidden  bg-inherit">
+<div class="w-dvw max-md:overflow-hidden bg-inherit  text-inherit">
     <div class="text-center">
        <p class="min-md:text-3xl text-2xl">EMPLOYEE MANAGEMENT</p>
     </div>
-   <div class="min-md:flex min-md:justify-center min-md:flex-col items-center w-full min-md:gap-y-40 my-7 px-20" >
-         <div> <input type="text" [(ngModel)]="searchQuery" class="border border-gray-500 w-full min-md:w-96 rounded-sm outline-none p-1" (change)="loadEmployees()" placeholder="search"></div>
+   <div class="min-md:flex min-md:justify-between  bg-inherit flex-nowrap  text-inherit max-md:flex-col items-center w-full  my-7 min-md:px-20" >
+         <div> <input type="text" [(ngModel)]="searchQuery" class="border border-gray-500 w-full min-md:w-96 text-gray-700 rounded-sm outline-none p-1" (change)="loadEmployees()" placeholder="search"></div>
 
-         <div class="flex">
+         <div class="flex bg-inherit text-inherit">
            <label for="sort">sortBy:</label>
-          <select name="" id="sort" name="sort" [(ngModel)]="sortBy" (change)="loadEmployees()" class="border border-gray-500 w-full  rounded-sm p-1 outline-none">
-           <option value="department">Department</option>
-           <option value="salary">Salary</option>
-           <option value="name" selected>Name</option>
+          <select name="" id="sort" name="sort" [(ngModel)]="sortBy" (change)="loadEmployees()" class="border border-gray-500 w-full  bg-inherit  text-inherit  rounded-sm p-1 outline-none">
+           <option value="department" class="!bg-inherit">Department</option>
+           <option value="email" class="bg-inherit">Email</option>
+           <option value="salary" class="bg-inherit">Salary</option>
+           <option value="name" class="bg-inherit" selected>Name</option>
 
          </select></div>
            <div>
-            <label class="inline-flex items-center cursor-pointer" (click)="loadEmployees()">
+            <label class="inline-flex items-center cursor-pointer" (change)="loadEmployees()">
               <span>A->Z</span>
               <input type="checkbox" value="" name="order" [(ngModel)]="order" class="sr-only peer"  />
               <div
@@ -23,7 +24,7 @@
               <span>Z->A</span>
             </label>
            </div>
-         <div class="flex">
+         <div class="flex bg-inherit">
           <label for="limit" >Limit</label>
           <select name="limit" id="limit" name="limit" class="max-md:w-1/3 w-full border bg-inherit border-gray-400" [(ngModel)]="limit" (change)="loadEmployees()">
              <option value="5">5</option>
@@ -104,14 +105,8 @@
      <app-pagination [totalPages]="totalPages()" [page]="page" (sendPage)="changePage($event)"  ></app-pagination>
    </div>
 </div>
-</div>
 
-
-
-
-<!-- Modal -->
-
-<div id="crud-modal" *ngIf="toggleEmployeeForm"  class=" overflow-y-hidden overflow-x-hidden absolute top-5 left-4/12 z-50 max-md:left-1   justify-center items-center w-fit  max-h-full">
+<div id="crud-modal" *ngIf="toggleEmployeeForm"  class="overflow-y-hidden overflow-x-hidden absolute top-5 left-4/12 z-50 max-md:left-1 bg-inherit   justify-center items-center w-fit max-md:w-full  max-h-full">
    <div class="relative p-4 w-full max-w-md max-h-full">
        <!-- Modal content -->
        <div class="relative bg-white rounded-lg shadow-md shadow-gray-400">
@@ -172,3 +167,11 @@
        </div>
    </div>
    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+
+

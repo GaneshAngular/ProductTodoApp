@@ -81,7 +81,7 @@ const refreshToken = async (req: Request, res: Response): Promise<any> => {
       const user = await models.userModel.findById(verifyRefresh.id);
       if (user?.refreshToken !== refreshToken)
         return res
-          .status(INVALID)
+          .status(SERVER_ERROR)
           .json({ message: "Refresh token invalid" });
 
 
