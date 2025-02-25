@@ -2,7 +2,7 @@
     <div class="text-center">
        <p class="min-md:text-3xl text-2xl">EMPLOYEE MANAGEMENT</p>
     </div>
-   <div class="min-md:flex min-md:justify-between  bg-inherit flex-nowrap  text-inherit max-md:flex-col items-center w-full  my-7 min-md:px-20" >
+   <div class="min-md:flex min-md:justify-between gap-x-20  bg-inherit flex-nowrap  text-inherit max-md:flex-col items-center w-full  my-7 min-md:px-20" >
          <div> <input type="text" [(ngModel)]="searchQuery" class="border border-gray-500 w-full min-md:w-96 text-gray-700 rounded-sm outline-none p-1" (change)="loadEmployees()" placeholder="search"></div>
 
          <div class="flex bg-inherit text-inherit">
@@ -70,9 +70,9 @@
            </tr>
        </thead>
        <tbody>
-           <tr  *ngFor="let item of employees;let i=index" class=" border border-gray-200">
+           <tr  *ngFor="let item of employees;index as i; trackBy:trackData" class=" border border-gray-200">
                <th scope="row" class="px-6 py-4 font-medium  whitespace-nowrap">
-                  {{i+1}}
+                  {{i+limit*page-limit+1}}
                </th>
                <td class="px-6 py-4">
                    {{item.name}}
@@ -139,8 +139,11 @@
                        <input type="text" [ngClass]="{'border-red-500':checkInvalidFields('password')}" name="password" formControlName="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 outline-none block w-full p-2.5" placeholder="Enter Your Password" required="">
                    </div>
                    <div class="col-span-2">
-                       <label for="position" class="block mb-2 text-sm font-medium text-gray-900 ">Position</label>
-                       <input type="text" [ngClass]="{'border-red-500':checkInvalidFields('position')}" name="position" formControlName="position" id="position" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 outline-none block w-full p-2.5" placeholder="Enter Your position" required="">
+                     <label for="position" class="block mb-2 text-sm font-medium text-gray-900 ">Position</label>
+                      <select name="position" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 outline-none block w-full p-2.5" formControlName="position" id="position" [ngClass]="{'border-red-500':checkInvalidFields('position')}">
+                        <option [value]="item" *ngFor="let item of positions">{{item}}</option>
+                      </select>
+
                    </div>
                    <div class="col-span-2 sm:col-span-1">
                        <label for="salary" class="block mb-2 text-sm font-medium text-gray-900 ">Salary</label>

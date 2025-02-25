@@ -4,30 +4,44 @@ import { LocalstorageService } from '../../core/services/localstorage/localstora
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../core/services/theme/theme.service';
+import { UserService } from '../../core/services/user/user.service';
+import { EmployeeService } from '../../core/services/employee/employee.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,RouterLink],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent implements OnInit {
   authService = inject(AuthService);
   localService = inject(LocalstorageService);
-
+ employeeService=inject(EmployeeService)
+ userService=inject(UserService)
   isUser = false;
+  toggleMenu=false
   darkTheme!: boolean;
   ngOnInit(): void {
     this.authService.getUserActive().subscribe((user) => (this.isUser = user));
-    this.authService.getUserActive().subscribe((res: any) => {
-      this.isUser = res;
-    });
+   this.loadTheme()
+   if(this.isUser)
+   this.loadUser()
+  }
+
+
+
+  toggleMenus(){
+    this.toggleMenu =!this.toggleMenu;
+  }
+
+  loadTheme(){
     if (!localStorage.getItem('darkTheme')) {
 
       this.darkTheme = window.matchMedia('(prefers-color-scheme:dark)').matches
         ? true
         : false;
-       
+
     } else {
       console.log("Using stored theme")
       this.darkTheme =
@@ -44,8 +58,8 @@ export class NavbarComponent implements OnInit {
       });
   }
   changeTheme() {
-    this.toggleTheme();
     this.darkTheme = !this.darkTheme;
+    this.toggleTheme();
   }
   toggleTheme() {
     if (this.darkTheme) {
@@ -60,4 +74,12 @@ export class NavbarComponent implements OnInit {
       localStorage.setItem('darkTheme', 'white');
     }
   }
+
+  loadUser(){
+   this.employeeService.getProfile().subscribe((res:any)=>{
+
+        this.userService.setUser(res.data)
+   })
+  }
+
 }

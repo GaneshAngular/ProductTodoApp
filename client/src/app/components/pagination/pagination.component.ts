@@ -22,12 +22,12 @@ export class PaginationComponent implements OnInit ,OnChanges{
        this.currantPage=this.page
   }
   ngOnChanges(){
-    console.log(this.totalPages)
+
     this.generatePageNumbers()
   }
   generatePageNumbers() {
     this.pages = Array(this.totalPages).fill(0).map((_, i) => i +1);
-    console.log(this.pages)
+    
   }
 
   viewPage(page:number){

@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
    sortBy='name'
    searchQuery=""
    limit=5
+   positions=["Software Engineer","HR Manager","Financial Manager","Accounting Manager","Staff","Product Manager"]
   toggleEmployeeForm=false
   today=new Date()
   addForm=new FormGroup({
@@ -51,7 +52,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadEmployees(){
-    console.log(this.order)
+
     let params=new HttpParams().set('page',this.page).set('limit',this.limit).set('order',this.order?'desc':'asc').set('sort',this.sortBy)
     if(this.searchQuery)
        params=params.set('search',this.searchQuery)
@@ -72,6 +73,10 @@ changePage(event:any){
    this.page=event
    this.loadEmployees()
 }
+
+trackData(index:number,data:any){
+  return data._id
+  }
 
 
 addEmployee(){

@@ -73,7 +73,7 @@ const getProfile=async(req:Request,res:Response):Promise<any>=>{
         const token=req.headers?.authorization?.split(' ')[1]||''
              const id:any=verifyToken(token)
              const user=await userModel.findById(id.id)
-             return res.status(FOUND).json({data:user})
+             return res.status(OK).json({data:user})
        }catch(error){
            return res.status(SERVER_ERROR).json({message:"Server error"})
        }
@@ -81,13 +81,16 @@ const getProfile=async(req:Request,res:Response):Promise<any>=>{
 
 
 const updateProfile=async(req:Request,res:Response):Promise<any>=>{
-    const data=req.body
+    const data:any=req.body
     const token=req.headers?.authorization?.split(' ')[1]||''
     try{    
           const id:any=verifyToken(token)
           if(!id)return res.status(UNAUTHORISE).json({message:"Unauthorise"})
+            const isExist=await userModel.findOne({email:data.email})
+            if(isExist?.email!==data.email) return res.status(FOUND).json({message:"Email already exist"})
+
           const user=await userModel.findByIdAndUpdate(id.id,data)
-          return res.status(FOUND).json({message:"Profile Updated",data})
+          return res.status(OK).json({message:"Profile Updated",data:user})
     }catch(error){
         return res.status(SERVER_ERROR).json({message:"Server error"})
     }
@@ -99,7 +102,7 @@ const updateEmployee=async(req:Request,res:Response):Promise<any>=>{
              const {id}=req.query
              const newData=req.body
                const isExist=await userModel.findOne({email:newData.email})
-               if(isExist)return res.status(FOUND).json({message:"Email Already exists"})
+               if(isExist)return res.status(OK).json({message:"Email Already exists"})
               const user=await userModel.findByIdAndUpdate(id,newData)
               if(!user)return res.status(NOT_FOUND).json({message:"Not Found"})
 
